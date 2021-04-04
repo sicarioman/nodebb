@@ -1,0 +1,37 @@
+{
+  "name": "nodebb",
+  "version": "1.0.0",
+  "description": "Open Source Forum Software",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start:dev": "nodemon src/app.js",
+    "lint": "eslint ./src"
+  },
+  "keywords": [
+    "forum",
+    "openforum",
+    "forums",
+    "discussions",
+    "nodebb"
+  ],
+  "author": "Sicarioman",
+  "license": "MIT",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.5",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-validator": "^6.10.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongodb": "^3.6.4",
+    "mongoose": "^5.11.18",
+    "nodemailer": "^6.5.0"
+  },
+  "devDependencies": {
+    "eslint": "^7.21.0",
+    "nodemon": "^2.0.7"
+  }
+}
