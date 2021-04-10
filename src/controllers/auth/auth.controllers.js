@@ -33,6 +33,11 @@ exports.postLogin = async(req, res, next) => {
     }
 };
 
+exports.postLogout = (req, res, next) => {
+    res.clearCookie('Authorization');
+    res.status(200).json({message: 'Successfully Logged Out'});
+};
+
 exports.postGetVerifyEmail = async(req, res, next) => {
     const { email } = req.body;
 

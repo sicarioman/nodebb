@@ -22,7 +22,7 @@ module.exports = class VerifyService {
             `;
 
             // Set Verification Code
-            await UserService.setEmailVerificationCode(email, verifyCode, Date.now() + 600000);
+            await this.setEmailVerificationCode(email, verifyCode, Date.now() + 600000);
 
             // Email Code
             return EmailService.send(null, email, 'Verify Your Email Address', body);
@@ -33,7 +33,29 @@ module.exports = class VerifyService {
             throw err;
         }
     }
-    
+
+    /**
+     * Set Email Verification Code for a User
+     * @param {string} email 
+     * @param {string} code 
+     * @param {Date} expireTime 
+     * @returns {Promise}
+     */
+    static async setEmailVerificationCode(email, code, expireTime) {
+        try {
+            const user = await UserService.getUser(null, email);
+            user.emailVerifyCode = code;
+            user.emailVerifyCodeExpiration = expireTime;
+            
+            await user.save();
+        } catch(err) {
+            if(!err.statusCode) {
+                err.statusCode = 500;
+            }
+            throw err;
+        }
+    }
+
     /**
      * Returns User Object on Success
      * @param {string} email 
@@ -42,12 +64,7 @@ module.exports = class VerifyService {
      */
     static async verifyEmail(email, code) {
         try {
-            const user = await User.findOne({email: email});
-            if(!user) {
-                const error = new Error('User not found');
-                error.statusCode = 404;
-                throw error;
-            }
+            const user = await UserService.getUser(null, email);
 
             if(user.emailVerifyCode !== code) {
                 const error = new Error('Invalid Verification Code');
@@ -80,14 +97,7 @@ module.exports = class VerifyService {
      */
     static async isEmailVerified(email) {
         try {
-            const user = await User.findOne({email: email});
-            if(!user) {
-                const error = new Error('User not found');
-                error.statusCode = 404;
-                throw error;
-            }
-
-            return user.verifiedEmail;
+            return (await UserService.getUser(null, email)).verifiedEmail;
         } catch(err) {
             if(!err.statusCode) {
                 err.statusCode = 500;
